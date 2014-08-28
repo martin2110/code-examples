@@ -9,5 +9,5 @@ end
 
 stopwatch do
   sleep(10)
-  puts @time
 end
+puts @time
