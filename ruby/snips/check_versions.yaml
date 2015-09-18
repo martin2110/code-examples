@@ -1,0 +1,11 @@
+---
+web:
+ - host: www.foo.com
+   port: 80
+   protocol: http
+   uri: /health
+ - host: www.bar.com
+   port: 443
+   protocol: https
+   uri: /health
+

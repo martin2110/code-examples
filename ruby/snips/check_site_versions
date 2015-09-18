@@ -1,0 +1,34 @@
+require 'httparty'
+require 'pp'
+require 'yaml'
+class CheckVersion
+  def initialize(urls)
+    @urls = urls
+    @urls.each_with_index do |url, index|
+      @urls[index]['version'] = get_version(url['protocol'], url['host'], url['port'], url['uri'])
+    end
+    pp same_versions?(extract_versions(@urls))
+    @urls.each { |x| puts "#{x['host']}: #{x['version']}"}
+  end
+
+  def get_version(protocol, host, port, uri)
+    HTTParty.get("#{protocol}://#{host}:#{port}#{uri}").body.to_s.rpartition('=')[2].chomp
+  end
+
+  def same_versions?(versions)
+    if versions.uniq.length != 1
+      puts "no matchie"
+      false
+    else
+      puts "OK versions"
+      true
+    end
+  end
+
+  def extract_versions(urls)
+     urls.map {|n| n['version'] }
+  end
+end
+type='web'
+servers = YAML.load_file('check_versions.yaml')
+CheckVersion.new(servers[type])
